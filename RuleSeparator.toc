@@ -3,6 +3,7 @@
 ## Author: Luis Pastén
 ## Version: 1.0
 ## Notes: Con amor pal pueblo
-## SavedVariables: RSdb
+
+embeds.xml
 
 main.lua

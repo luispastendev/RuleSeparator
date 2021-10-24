@@ -1,16 +1,106 @@
+local RuleSeparator = LibStub("AceAddon-3.0"):NewAddon("RuleSeparator", "AceConsole-3.0")
+
 local AceGUI = LibStub("AceGUI-3.0")
-local Acedb = LibStub("AceDB-3.0")
+local openWindow = false
 
--- declare defaults to be used in the DB
--- local defaults = {
---     profile = {
---         rules = "",
---     }
--- }
+-- FUNCTIONS LIB ================================
+function filterParagraph(inputstr, sep)
+    if sep == nil then
+            sep = "%s"
+    end
 
--- function MyAddon:OnInitialize()
---     self.db = LibStub("AceDB-3.0"):New("RSdb", defaults, true)
--- end
+    local s = ''
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do              
+        if s == nil or s == '' then -- is first loop?
+            s = str
+        else
+            s = s .. " " .. str
+        end            
+    end
+    return s
+end
+
+function filterLineBreaks(input) 
+    lines = {}
+    for s in input:gmatch("[^\r\n]+") do
+        table.insert(lines, s)
+    end
+    return lines
+end
+
+function splitText (inputstr, sep)
+    if sep == nil then
+            sep = "%s"
+    end
+    local t={}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+            table.insert(t, str)
+    end
+    return t
+end
+
+function newMacroOrSpace(block)
+    local output = ""
+    if block == "" or block == nil then
+        output = "" -- add "/ab "
+    else
+        output = " "
+    end
+    return output
+end
+
+function doMacro(paragraph)
+    local limit = 255
+    local macros = {""}
+    local block  = 1
+
+    for k, v in pairs(paragraph) do
+        if string.len(v) < limit then
+            
+            tmp = macros[block] .. newMacroOrSpace(macros[block]) .. v
+
+            if string.len(tmp) <= limit then
+                macros[block] = tmp    
+            else 
+                block = block + 1
+                macros[block] = newMacroOrSpace(macros[block]) .. v
+            end
+        else 
+            block = block + 1
+            macros[block] = newMacroOrSpace(macros[block]) .. v
+        end 
+    end
+    return macros
+end
+
+function appendMacros(original,new)
+    for k,v in pairs(new) do
+        table.insert(original, v)
+    end
+    return original
+end
+
+function generateParagraphs(input)
+    blocks = {} 
+    for k, v in pairs(filterLineBreaks(input)) do
+        blocks[k] = filterParagraph(v)
+    end
+    return blocks
+end
+
+function buildMacros(blocks) 
+    local macros = {}
+    for k, block in pairs(blocks) do
+        chunk = doMacro(splitText(blocks[k]))
+        macros = appendMacros(macros, chunk) 
+        --do return end
+    end
+    return macros
+end
+
+
+
+-- FUNCTIONS LIB ================================
 
 
 local addon = {}
@@ -19,112 +109,65 @@ function addon.chat(str_in)
     print("\124c00FF0000"..str_in.."\124r");
 end
 
+
 function addon.makeWindow()
+
+    if openWindow then
+        return
+    end
+
+    openWindow = true
+    
     local f = AceGUI:Create("Frame")
-    f:SetCallback("OnClose",function(widget) AceGUI:Release(widget) end)
-    f:SetTitle("RulesSeparator")
-    -- f:SetStatusText("por Luis Pastén con amor pal pueblo")
+    f:SetCallback("OnClose",function(widget)
+        AceGUI:Release(widget) 
+        openWindow = false
+    end)
+    f:SetTitle("RuleSeparator")
+    f:SetStatusText("RuleSeparator | v1.0 | por Luis Pastén con amor pal pueblo :)")
     f:SetLayout("Flow")
 
-    -- INPUT
+    -- -- -- INPUT
     local input = AceGUI:Create("MultiLineEditBox")
-    input:SetLabel("Ingresa las reglas aqui")
+    input:SetLabel("Copia y pega las reglas aqui")
     input:SetNumLines(20)
     input:SetFullWidth("isFull") 
     input:DisableButton("disabled")
-
-    -- SAVE BUTTON
-    local btn = AceGUI:Create("Button")
-    btn:SetFullWidth("isFull") 
-    btn:SetText("Guardar")
-    btn:SetCallback("OnClick", 
-        function() 
-            rules = input:GetText();
-            -- defaults.profile.rules = rules
-            addon.chat(rules)
-        end
-    )
-
-    -- SEND RULES BUTTON
+    
+    -- -- -- SEND RULES BUTTON
     local btn_send = AceGUI:Create("Button")
     btn_send:SetFullWidth("isFull") 
     btn_send:SetText("Lanzar en Banda")
     btn_send:SetCallback("OnClick", function() 
-        addon.chat("Lanzando en banda")
+        rules = input:GetText();
+        blocks = generateParagraphs(rules)
+        for k,v in pairs(buildMacros(blocks)) do
+            -- addon.chat(v)
+            SendChatMessage(v, "RAID_WARNING", nil, GetUnitName("PLAYERTARGET"))
+        end
+    end)
+
+    -- clean input
+    local btn_clean = AceGUI:Create("Button")
+    btn_clean:SetFullWidth("isFull") 
+    btn_clean:SetText("Borrar Todo")
+    btn_clean:SetCallback("OnClick", 
+        function() 
+            input:SetText("")
         end
     )
 
-
-
-    -- Add the button to the container
+    -- -- Add the button to the container
     f:AddChild(input)
-    f:AddChild(btn)
+    f:AddChild(btn_clean)
     f:AddChild(btn_send)
 
 end
 
 
-function addon.showMsg(msg, editBox)
-    if msg == 'bye' then
-        print('Goodbye, World!')
-    else
-        addon.makeWindow()
-    end
-end
+RuleSeparator:RegisterChatCommand("rs", "openWindow")
 
--- constructor
-function Recount:OnInitialize()
+function RuleSeparator:openWindow(input)
 
-end
-
--- StaticPopupDialogs["EXAMPLE_HELLOWORLD"] = {
--- 	text = "Do you want to greet the world today?",
--- 	button1 = "Yes",
--- 	button2 = "No",
---     OnShow = function (self, data)
---         self.editBox:SetText("Some text goes here")
---     end,
---     OnAccept = function (self, data, data2)
---         local text = self.editBox:GetText()
---         -- do whatever you want with it
---     end,
---     hasEditBox = true
--- 	timeout = 0,
--- 	whileDead = true,
--- 	hideOnEscape = true,
--- }
-
-
-
-SlashCmdList['SLASHCMD'] = addon.showMsg;
-
-
-SLASH_SLASHCMD1 = '/rs'
-
-
-
-local frame = CreateFrame("FRAME"); -- Need a frame to respond to events
-frame:RegisterEvent("ADDON_LOADED"); -- Fired when saved variables are loaded
-frame:RegisterEvent("PLAYER_LOGOUT"); -- Fired when about to log out
-
-function frame:OnEvent(event, arg1)
- if event == "ADDON_LOADED" and arg1 == "HaveWeMet" then
-  -- Our saved variables are ready at this point. If there are none, both variables will set to nil.
-  if HaveWeMetCount == nil then
-   HaveWeMetCount = 0; -- This is the first time this addon is loaded; initialize the count to 0.
-  end
-  if HaveWeMetBool then
-   print("Hello again, " .. UnitName("player") .. "!");
-  else
-   HaveWeMetCount = HaveWeMetCount + 1; -- It's a new character.
-   print("Hi; what is your name?");
-  end
- elseif event == "PLAYER_LOGOUT" then
-   HaveWeMetBool = true; -- We've met; commit it to memory.
- end
-end
-frame:SetScript("OnEvent", frame.OnEvent);
-SLASH_HAVEWEMET1 = "/hwm";
-function SlashCmdList.HAVEWEMET(msg)
- print("HaveWeMet has met " .. HaveWeMetCount .. " characters.");
+    addon.makeWindow()
 end
