@@ -16,7 +16,7 @@ local Acedb = LibStub("AceDB-3.0")
 local addon = {}
 
 function addon.chat(str_in)
-    print("\124c00FF0000  "..str_in.."\124r");
+    print("\124c00FF0000"..str_in.."\124r");
 end
 
 function addon.makeWindow()
