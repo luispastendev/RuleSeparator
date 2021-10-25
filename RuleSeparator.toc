@@ -1,8 +1,9 @@
 ## Interface: 30300
 ## Title: RuleSeparator
 ## Author: Luis Pastén
-## Version: 1.0
-## Notes: Con amor pal pueblo
+## Version: 1.1
+## Notes: Guarda tus reglas de raid y lanza en banda con un boton
+## SavedVariables: rsDB
 
 embeds.xml
 

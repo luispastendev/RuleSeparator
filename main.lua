@@ -3,6 +3,26 @@ local RuleSeparator = LibStub("AceAddon-3.0"):NewAddon("RuleSeparator", "AceCons
 local AceGUI = LibStub("AceGUI-3.0")
 local openWindow = false
 
+
+-- Constructor ===================================
+
+local defaults = {
+    profile = {
+        rules = "",
+    }
+}
+
+function RuleSeparator:OnInitialize()
+
+    RuleSeparator.db = LibStub("AceDB-3.0")
+
+    if RuleSeparator.db.profile == nil then
+        RuleSeparator.db = LibStub("AceDB-3.0"):New("rsDB",defaults, true)
+    end
+    -- print(RuleSeparator.db.profile.rules)
+end
+
+
 -- FUNCTIONS LIB ================================
 function filterParagraph(inputstr, sep)
     if sep == nil then
@@ -124,7 +144,7 @@ function addon.makeWindow()
         openWindow = false
     end)
     f:SetTitle("RuleSeparator")
-    f:SetStatusText("RuleSeparator | v1.0 | por Luis Pastén con amor pal pueblo :)")
+    f:SetStatusText("RuleSeparator | v1.1 | por Luis Pastén con amor pal pueblo :)")
     f:SetLayout("Flow")
 
     -- -- -- INPUT
@@ -132,6 +152,7 @@ function addon.makeWindow()
     input:SetLabel("Copia y pega las reglas aqui")
     input:SetNumLines(20)
     input:SetFullWidth("isFull") 
+    input:SetText(RuleSeparator.db.profile.rules) -- load from db 
     input:DisableButton("disabled")
     
     -- -- -- SEND RULES BUTTON
@@ -139,7 +160,7 @@ function addon.makeWindow()
     btn_send:SetFullWidth("isFull") 
     btn_send:SetText("Lanzar en Banda")
     btn_send:SetCallback("OnClick", function() 
-        rules = input:GetText();
+        rules = input:GetText()
         blocks = generateParagraphs(rules)
         for k,v in pairs(buildMacros(blocks)) do
             -- addon.chat(v)
@@ -157,13 +178,25 @@ function addon.makeWindow()
         end
     )
 
+    -- save in db
+    local btn_save = AceGUI:Create("Button")
+    btn_save:SetFullWidth("isFull") 
+    btn_save:SetText("Guardar")
+    btn_save:SetCallback("OnClick", 
+        function() 
+            RuleSeparator.db.profile.rules = input:GetText()
+        end
+    )
+
     -- -- Add the button to the container
     f:AddChild(input)
-    f:AddChild(btn_clean)
     f:AddChild(btn_send)
+    f:AddChild(btn_clean)
+    f:AddChild(btn_save)
+
+    -- GET FROM DB CURRENT RULES
 
 end
-
 
 RuleSeparator:RegisterChatCommand("rs", "openWindow")
 
