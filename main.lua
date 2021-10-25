@@ -144,7 +144,7 @@ function addon.makeWindow()
         openWindow = false
     end)
     f:SetTitle("RuleSeparator")
-    f:SetStatusText("RuleSeparator | v1.1 | por Luis Pastén con amor pal pueblo :)")
+    f:SetStatusText("RuleSeparator | v1.1 | por Martex - Naerzone")
     f:SetLayout("Flow")
 
     -- -- -- INPUT
