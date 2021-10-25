@@ -21,7 +21,7 @@
 ```
 ![Mostrar addon](/screenshots/img2.png "Mostrar Addon")
 
-#### 4-. Copiar y pegar / redactar las reglas según te convengan y dar guardar, al lanzar en banda las reglas se publicarán por alerta de banda siempre y cuando estes en raid
+#### 4-. Copiar y pegar / redactar las reglas (deberás estar en grupo modo banda para lanzar las reglas)
 ![Usar addon](/screenshots/img3.png "Usar Addon")
 
 
