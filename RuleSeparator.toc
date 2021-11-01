@@ -8,3 +8,7 @@
 embeds.xml
 
 main.lua
+
+split_text.lua
+
+
