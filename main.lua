@@ -19,6 +19,10 @@ local defaults = {
             sr = "",
             generic = ""
         },
+        buffs = {
+            section1 = "",
+            section2 = ""
+        },
         general = {
             discord = "",
             help = help,
@@ -40,7 +44,7 @@ function RuleSeparator:OnInitialize()
         RuleSeparator.db = defaults
         chat("Se actualizo tu db a la version "..version)
     end
-    
+
 end
 
 
@@ -139,10 +143,7 @@ local function rulerBox(container, tag, selector)
         else
             raidWarning(">> Reglas de " .. tag .. " " .. RuleSeparator.db.profile.general.guildName .. " <<")
         end
-        
 
-        raidWarning("sad ")
-        
         for k,v in pairs(RuleSeparator:buildMacros(blocks)) do
             raidWarning(v)
         end
@@ -163,6 +164,41 @@ local function rulerBox(container, tag, selector)
     container:AddChild(input)
 end
 
+
+
+local function Buffs(container, label, selector)
+
+    local group = AceGUI:Create("InlineGroup")
+    group:SetTitle(label) 
+    group:SetFullWidth(true) 
+    group:SetLayout("Flow")
+    group:AddChild(group)
+    container.AddChild(group)
+
+    local input = AceGUI:Create("MultiLineEditBox")
+    input:SetLabel("")
+    input:SetNumLines(4)
+    input:SetFullWidth("isFull") 
+    -- input:SetText(RuleSeparator.db.profile.buffs[selector]) -- load from db 
+    input:SetText("asdfasdf")
+
+    input:SetCallback("OnEnterPressed",function()
+        -- RuleSeparator.db.profile.buffs[selector] = input:GetText()
+        -- chat("Reglas de " .. tag .. " guardadas correctamente")
+    end)
+    group:AddChild(input)
+
+
+    local button = AceGUI:Create("Button")
+    button:SetText("Lanzar")
+    button:SetWidth(50)
+    button:SetCallback("OnClick", function()
+        -- raidWarning(RuleSeparator.db.profile.buffs[selector])
+    end)    
+    group:AddChild(button)
+
+end
+
 -- Callback function for OnGroupSelected
 local function SelectGroup(container, event, group)
         container:ReleaseChildren()
@@ -177,8 +213,13 @@ local function SelectGroup(container, event, group)
         elseif group == "generic" then
             rulerBox(container, "Otras Raids", "generic")
         elseif group == "buffs" then
+            -- General(container)
+            Buffs(container, "Buffos de Paladines: ", "section1")
+            Buffs(container, "Buffos Variados: ", "section2")
     end
 end
+
+
 
 
 function makeWindow()
