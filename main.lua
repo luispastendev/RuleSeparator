@@ -35,14 +35,17 @@ function RuleSeparator:OnInitialize()
 
     RuleSeparator.db = LibStub("AceDB-3.0")
 
+    
     if RuleSeparator.db.profile == nil then
         RuleSeparator.db = LibStub("AceDB-3.0"):New("rsDB",defaults, true)
     end
 
     -- update db to the version v2.0
-    if type(RuleSeparator.db.profile.rules) ~= 'table' then 
-        RuleSeparator.db = defaults
-        chat("Se actualizo tu db a la version "..version)
+    if type(RuleSeparator.db.profile.rules) ~= 'table' then
+
+        RuleSeparator.db:ResetDB('Default')
+        print("Se actualizó tu db a a la versión " .. version)
+        -- chat("Se actualizo tu db a la version " .. version)
     end
 
 end
