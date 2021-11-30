@@ -42,10 +42,8 @@ function RuleSeparator:OnInitialize()
 
     -- update db to the version v2.0
     if type(RuleSeparator.db.profile.rules) ~= 'table' then
-
         RuleSeparator.db:ResetDB('Default')
         print("Se actualizó tu db a a la versión " .. version)
-        -- chat("Se actualizo tu db a la version " .. version)
     end
 
 end
@@ -170,35 +168,52 @@ end
 
 
 local function Buffs(container, label, selector)
+    
 
-    local group = AceGUI:Create("InlineGroup")
-    group:SetTitle(label) 
-    group:SetFullWidth(true) 
-    group:SetLayout("Flow")
-    group:AddChild(group)
-    container.AddChild(group)
-
-    local input = AceGUI:Create("MultiLineEditBox")
-    input:SetLabel("")
-    input:SetNumLines(4)
-    input:SetFullWidth("isFull") 
-    -- input:SetText(RuleSeparator.db.profile.buffs[selector]) -- load from db 
-    input:SetText("asdfasdf")
-
-    input:SetCallback("OnEnterPressed",function()
-        -- RuleSeparator.db.profile.buffs[selector] = input:GetText()
-        -- chat("Reglas de " .. tag .. " guardadas correctamente")
-    end)
-    group:AddChild(input)
-
+    
+    -- V1.0
+    local groupp = AceGUI:Create("InlineGroup")
+    groupp:SetTitle(label) 
+    groupp:SetFullWidth(true) 
+    groupp:SetFullHeight(true)  
+    groupp:SetLayout("Fill")
+    container.AddChild(groupp)
 
     local button = AceGUI:Create("Button")
-    button:SetText("Lanzar")
-    button:SetWidth(50)
-    button:SetCallback("OnClick", function()
-        -- raidWarning(RuleSeparator.db.profile.buffs[selector])
-    end)    
-    group:AddChild(button)
+    button:SetText("Click Me!")
+    button:SetWidth(200)
+    button:SetCallback("OnClick", 
+        function() 
+            print("textStore") 
+        end)
+    groupp:AddChild(button)
+
+    -- local input = AceGUI:Create("MultiLineEditBox")
+    -- input:SetLabel("Introduce las reglas aquí")
+    -- input:SetNumLines(100)
+    -- input:SetFullWidth("isFull") 
+    -- input:SetText("asdfasdflasd fasdjfkl;asdf klasdfjlaskdf")
+    -- input:SetCallback("OnEnterPressed",function()
+    --     chat("Reglas de " .. tag .. " guardadas correctamente")
+    -- end)
+
+    -- group:AddChild(input)
+
+    -- V2.0
+    -- input:SetCallback("OnEnterPressed",function()
+    --     -- RuleSeparator.db.profile.buffs[selector] = input:GetText()
+    --     -- chat("Reglas de " .. tag .. " guardadas correctamente")
+    -- end)
+    -- group:AddChild(input)
+
+
+    -- local button = AceGUI:Create("Button")
+    -- button:SetText("Lanzar")
+    -- button:SetWidth(50)
+    -- button:SetCallback("OnClick", function()
+    --     -- raidWarning(RuleSeparator.db.profile.buffs[selector])
+    -- end)    
+    -- group:AddChild(button)
 
 end
 
