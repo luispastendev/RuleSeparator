@@ -19,15 +19,11 @@
 ```
 /rs
 ```
-![Mostrar addon](/screenshots/img2.png "Mostrar Addon")
-
-#### 4-. Copiar y pegar / redactar las reglas (deberás estar en modo banda para lanzar las reglas)
-![Usar addon](/screenshots/img3.png "Usar Addon")
+![Mostrar addon](/screenshots/img2.jpg "Mostrar Addon")
 
 
 ### Caracteristicas Actuales:
-- Guarda reglas inclusive después de deslogear
-- Detecta saltos de línea como nuevas alertas de banda
-- Limita párrafos a 255 caracteres si encuentra párrafos más grandes separa el texto en varias alertas según sean necesarias 
-
-
+- Lanzar canal de discord
+- Lanzar reglas de icc / sr / otra raid
+- Lanzar buffos configurados
+- Soporte para comandos por chat
