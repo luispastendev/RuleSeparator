@@ -10,7 +10,7 @@
 ### Instrucciones:
 
 #### 1-. Descarga la última versión del proyecto y descomprime el contenido en la carpeta de addons del juego (..\interface\AddOns\\):
-## [==> Descargar <==](https://github.com/luispastendev/RuleSeparator/releases/download/v1.1/RuleSeparator.zip)
+## [==> Descargar <==](https://github.com/luispastendev/RuleSeparator/releases/download/v2.0/RuleSeparatorV2.zip)
 
 #### 2-. Abrir el wow y activar el addon:
 ![Activar addon](/screenshots/img1.png "Activar Addon")
@@ -19,15 +19,11 @@
 ```
 /rs
 ```
-![Mostrar addon](/screenshots/img2.png "Mostrar Addon")
-
-#### 4-. Copiar y pegar / redactar las reglas (deberás estar en modo banda para lanzar las reglas)
-![Usar addon](/screenshots/img3.png "Usar Addon")
+![Mostrar addon](/screenshots/img2.jpg "Mostrar Addon")
 
 
 ### Caracteristicas Actuales:
-- Guarda reglas inclusive después de deslogear
-- Detecta saltos de línea como nuevas alertas de banda
-- Limita párrafos a 255 caracteres si encuentra párrafos más grandes separa el texto en varias alertas según sean necesarias 
-
-
+- Lanzar canal de discord
+- Lanzar reglas de icc / sr / otra raid
+- Lanzar buffos configurados
+- Soporte para comandos por chat
